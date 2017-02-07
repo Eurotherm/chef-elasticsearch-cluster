@@ -35,7 +35,8 @@ def tarball_sha256sum(version)
     '2.0.1' => '7be4a6c717002057e422073ca8e957df8b4cb198bf2399a0d79f42121e34798b', '2.1.0' => '8a4e85bcb506daa369651506af1cbc55c09fd7ff387d111142ae14d0a85d4d14',
     '2.1.1' => 'ebd69c0483f20ba7e51caa9606d4e3ce5fe2667e1216c799f0cdbb815c317ce6', '2.2.0' => 'ed70cc81e1f55cd5f0032beea2907227b6ad8e7457dcb75ddc97a2cc6e054d30',
     '2.2.1' => '7d43d18a8ee8d715d827ed26b4ff3d939628f5a5b654c6e8de9d99bf3a9b2e03', '2.2.2' => 'c706db594f1feb5051d90697c6c412eadd60e00a9ec3b4f345a122801183af69',
-    '2.3.0' => 'd68482c7633f2986263bc5f11f93b8a58c54c6cf5e337b615446d0a7c6fdcd8b', '2.3.1' => 'f0092e73038e0472fcdd923e5f2792e13692ea0f09ca034a54dd49b217110ebb'
+    '2.3.0' => 'd68482c7633f2986263bc5f11f93b8a58c54c6cf5e337b615446d0a7c6fdcd8b', '2.3.1' => 'f0092e73038e0472fcdd923e5f2792e13692ea0f09ca034a54dd49b217110ebb',
+    '5.2.0' => '6beec13bc64291020df8532d991b673b94119c5c365e3ddbc154ee35c6032953'
   }
   sha256sum = sha256sums[version] || node['elasticsearch']['sha256sum']
   raise "sha256sum is missing for elasticsearch tarball version #{version}" unless sha256sum

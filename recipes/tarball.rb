@@ -19,9 +19,9 @@
 
 tarball_url = if node['elasticsearch']['tarball_url'] == 'auto'
                 version = node['elasticsearch']['version'].split('.')[0]
-                if version < 2
+                if version < '2'
                   "https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-#{node['elasticsearch']['version']}.tar.gz"
-                elsif version < 5
+                elsif version < '5'
                   "https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/#{node['elasticsearch']['version']}/elasticsearch-#{node['elasticsearch']['version']}.tar.gz"
                 else
                   "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-#{node['elasticsearch']['version']}.tar.gz"

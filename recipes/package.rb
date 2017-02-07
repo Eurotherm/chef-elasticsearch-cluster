@@ -22,6 +22,7 @@ when 'debian'
   # apt repository configuration
   apt_repository 'elasticsearch' do
     uri node['elasticsearch']['apt']['uri']
+    distribution node['elasticsearch']['apt']['distribution']
     components node['elasticsearch']['apt']['components']
     key node['elasticsearch']['apt']['key']
     action node['elasticsearch']['apt']['action']
@@ -42,12 +43,12 @@ end
 # install elasticsearch
 package 'elasticsearch' do
   version node['elasticsearch']['version'] + node['elasticsearch']['version_suffix']
+  options node['elasticsearch']['apt']['options'] if node['elasticsearch']['apt']['options'] && node['platform_family'] == 'debian'
 end
 
 [node['elasticsearch']['data_dir'],
  node['elasticsearch']['log_dir'],
- node['elasticsearch']['work_dir']
-].each do |dir|
+ node['elasticsearch']['work_dir']].each do |dir|
   directory dir do
     owner node['elasticsearch']['user']
     group node['elasticsearch']['group']

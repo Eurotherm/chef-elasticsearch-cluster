@@ -17,15 +17,20 @@
 # limitations under the License.
 #
 
-fail "require value for node['elasticsearch']['config']['cluster.name']" unless node['elasticsearch']['config']['cluster.name']
+config_attribute = if node['elasticsearch']['config_attribute']
+                     node['elasticsearch']['config_attribute']
+                   else
+                     node['elasticsearch']['version'] >= '5.0' ? 'config_v5' : 'config'
+                   end
+
+raise "require value for node['elasticsearch']['#{config_attribute}']['cluster.name']" unless node['elasticsearch'][config_attribute]['cluster.name']
 
 directory node['elasticsearch']['conf_dir'] do
   mode node['elasticsearch']['dir_mode']
 end
 
 [node['elasticsearch']['scripts_dir'],
- node['elasticsearch']['plugins_dir']
-].each do |d|
+ node['elasticsearch']['plugins_dir']].each do |d|
   directory d do
     owner node['elasticsearch']['user']
     group node['elasticsearch']['group']
@@ -47,13 +52,15 @@ if node['elasticsearch']['use_chef_search']
   node.default['elasticsearch']['config']['discovery.zen.ping.unicast.hosts'] = search_cluster_nodes(node.chef_environment, node['elasticsearch']['search_role_name'], node['elasticsearch']['search_cluster_name_attr'], node[node['elasticsearch']['search_cluster_name_attr']])
 end
 
-config = node['elasticsearch'][node['elasticsearch']['config_attribute']].to_h
-node['elasticsearch']['databag_configs'].each do |databag|
-  data_bag_item = Chef::EncryptedDataBagItem.load(databag['name'], databag['item'])
-  databag['config_items'].each do |k, v|
-    config[k] = data_bag_item[v]
+config = node['elasticsearch'][config_attribute].to_h
+if node['elasticsearch']['databag_configs']
+  node['elasticsearch']['databag_configs'].each do |databag|
+    data_bag_item = Chef::EncryptedDataBagItem.load(databag['name'], databag['item'])
+    databag['config_items'].each do |k, v|
+      config[k] = data_bag_item[v]
+    end
   end
-end if node['elasticsearch']['databag_configs']
+end
 
 template node['elasticsearch']['conf_file'] do
   cookbook node['elasticsearch']['cookbook']
@@ -75,10 +82,19 @@ template node['elasticsearch']['logging_conf_file'] do
   notifies :restart, 'service[elasticsearch]' if node['elasticsearch']['notify_restart']
 end
 
-if (node['elasticsearch']['service_action'].is_a?(Array) && [:stop, 'stop'].any? { |x| node['elasticsearch']['service_action'].include?(x) }) || node['elasticsearch']['service_action'].to_s == 'stop'
-  notify_service_start = false
-else
-  notify_service_start = true
+notify_service_start = if (node['elasticsearch']['service_action'].is_a?(Array) && [:stop, 'stop'].any? { |x| node['elasticsearch']['service_action'].include?(x) }) || node['elasticsearch']['service_action'].to_s == 'stop'
+                         false
+                       else
+                         true
+                       end
+
+template node['elasticsearch']['jvm_options_file'] do
+  cookbook node['elasticsearch']['cookbook']
+  source 'jvm.options.erb'
+  owner node['elasticsearch']['user']
+  group node['elasticsearch']['group']
+  mode 0600
+  notifies :restart, 'service[elasticsearch]' if node['elasticsearch']['notify_restart']
 end
 
 ruby_block 'delay elasticsearch service start' do

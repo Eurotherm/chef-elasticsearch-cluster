@@ -3,8 +3,72 @@ elasticsearch-cluster CHANGELOG
 
 This file is used to list changes made in each version of the elasticsearch-cluster cookbook.
 
+0.5.6
+-----
+
+### Breaking Changes
+
+- cookbook by default now uses `node['elasticsearch']['config_v5']` for ES v5.x configuration
+
+
+### Changes
+
+- PR #80 - Grant Ridder
+  * fix rubocop offenses
+  * fix install repo for ES 5.x
+  * use correct java version for ES 5+
+  * fix ES v5 plugin installation
+
+- PR #87 - Virender Khatri
+  * update default elasticsearch version to v5.1.2, #83
+  * ubuntu update ca certificates, #82
+  * use default config_v5 attributes for elasticsearch v5.x, #84
+  * attributes cleanup, #81
+  * MAX_OPEN_FILES should be at least 65536 for v5, #85
+  * add kitchen tests for v1, v2 and v5, #86
+  * ci fix, rubocop, specs
+
+
+0.5.5
+-----
+
+### Changes
+
+- Wei Wu - add jvm options file
+
+- Wei Wu - skip index settings in elasticsearch.yml.erb
+
+- Wei Wu - add v5 configuration attributes
+
+- Wei Wu - fix cluster name validation
+
+- Wei Wu - fix spec and change `set` to `normal` to remove warnings
+
+- Grant Ridder - update Travis to Ruby 2.3.1
+
+- Grant Ridder - update CI configuration
+
+- Grant Ridder - fix lint
+
+0.5.4
+-----
+
+### Changes
+
+- Virender Khatri - bump es version v2.2.0
+
+- Martin Tomes - use the correct path to the tar file for the Elasticsearch distribution.
+
+- Virender Khatri - added checksum for missing versions tar file
+
+- Virender Khatri - fix for issue #75
+
+- Virender Khatri - fix lint and kitchen test default config
+
 0.5.3
 -----
+
+### Changes
 
 - Virender Khatri - tarball_file delete should be a file resource #71
 
@@ -13,6 +77,8 @@ This file is used to list changes made in each version of the elasticsearch-clus
 
 0.5.2
 -----
+
+### Changes
 
 - Virender Khatri - #65, update metadata for issues source url
 
@@ -25,6 +91,8 @@ This file is used to list changes made in each version of the elasticsearch-clus
 
 0.5.1
 -----
+
+### Changes
 
 - Virender Khatri - #53, bump es version to 2.0.0
 
@@ -44,6 +112,12 @@ This file is used to list changes made in each version of the elasticsearch-clus
 0.5.0
 -----
 
+## Breaking Changes
+
+- resource `elasticsearch_plugin` attribute `install_name` has been renamed to `install_source`
+
+### Changes
+
 - Virender Khatri - #49, fix for plugin syntax changed in es 2.x
 
 - Virender Khatri - #50, bump es version to 1.7.3
@@ -55,6 +129,8 @@ This file is used to list changes made in each version of the elasticsearch-clus
 
 0.4.7
 -----
+
+### Changes
 
 - Virender Khatri - #39, script.disable_dynamic is not supported in v2.x
 
@@ -75,8 +151,11 @@ not require `service` restart
 
 - Virender Khatri - #48, add resource script
 
+
 0.3.8
 -----
+
+### Changes
 
 - WEI WU - set databag config related attributes before generating template file. Instead of storing in chef node.
 
@@ -97,6 +176,8 @@ not require `service` restart
 0.3.0
 -----
 
+### Changes
+
 - WEI WU - Fixed config file location issue on CentOS7
 
 - Grant Ridder - Updated .rubocop.yml
@@ -108,6 +189,8 @@ not require `service` restart
 0.2.7
 -----
 
+### Changes
+
 - Virender Khatri - issue #23, Consider using directory-based plugin detection
 
 - Virender Khatri - issue #24, add attribute host & port to plugin resource
@@ -118,6 +201,8 @@ not require `service` restart
 
 0.2.5
 -----
+
+### Changes
 
 - Michael Klishin - Update README.md
 
@@ -132,12 +217,16 @@ not require `service` restart
 0.2.2
 -----
 
+### Changes
+
 - Michael Klishin - Provide dependency info in the README
 
 - Virender Khatri - issue #13, added 1.7.0 checksum attribute default['elasticsearch']['tarball_checksum']['1.7.0']
 
 0.2.0
 -----
+
+### Changes
 
 - Virender Khatri - added lwrp `elasticsearch_plugin`
 
@@ -149,6 +238,8 @@ not require `service` restart
 
 0.1.8
 -----
+
+### Changes
 
 - Virender Khatri - added os support and README update
 
@@ -166,10 +257,16 @@ not require `service` restart
 
 0.1.1
 -----
+
+### Changes
+
 - Virender Khatri - README and minor updates
 
 0.1.0
 -----
+
+### Changes
+
 - Virender Khatri - Initial release of elasticsearch-cluster
 
 - - -

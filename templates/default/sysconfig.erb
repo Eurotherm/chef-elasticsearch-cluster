@@ -83,6 +83,7 @@ MAX_OPEN_FILES=<%= node['elasticsearch']['sysconfig']['MAX_OPEN_FILES'] %>
 # When using Systemd, the LimitMEMLOCK property must be set
 # in /usr/lib/systemd/system/elasticsearch.service
 MAX_LOCKED_MEMORY=<%= node['elasticsearch']['sysconfig']['MAX_LOCKED_MEMORY'] %>
+ES_HEAP_SIZE=<%= node['elasticsearch']['sysconfig']['ES_HEAP_SIZE'] %>
 
 # Maximum number of VMA (Virtual Memory Areas) a process can own
 # When using Systemd, this setting is ignored and the 'vm.max_map_count'

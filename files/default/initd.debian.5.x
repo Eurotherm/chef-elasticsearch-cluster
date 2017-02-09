@@ -47,7 +47,7 @@ ES_USER=elasticsearch
 ES_GROUP=elasticsearch
 
 # The first existing directory is used for JAVA_HOME (if JAVA_HOME is not defined in $DEFAULT)
-JDK_DIRS="/usr/lib/jvm/java-8-oracle/ /usr/lib/jvm/j2sdk1.8-oracle/ /usr/lib/jvm/jdk-7-oracle-x64 /usr/lib/jvm/java-7-oracle /usr/lib/jvm/j2sdk1.7-oracle/ /usr/lib/jvm/java-7-openjdk /usr/lib/jvm/java-7-openjdk-amd64/ /usr/lib/jvm/java-7-openjdk-armhf /usr/lib/jvm/java-7-openjdk-i386/ /usr/lib/jvm/default-java"
+JDK_DIRS="/usr/lib/jvm/java-8-oracle-amd64 /usr/lib/jvm/java-8-oracle /usr/lib/jvm/j2sdk1.8-oracle /usr/lib/jvm/jdk-7-oracle-x64 /usr/lib/jvm/java-7-oracle /usr/lib/jvm/j2sdk1.7-oracle /usr/lib/jvm/java-7-openjdk /usr/lib/jvm/java-7-openjdk-amd64 /usr/lib/jvm/java-7-openjdk-armhf /usr/lib/jvm/java-7-openjdk-i386 /usr/lib/jvm/default-java"
 
 # Look for the right JVM to use
 for jdir in $JDK_DIRS; do
@@ -60,21 +60,11 @@ export JAVA_HOME
 # Directory where the Elasticsearch binary distribution resides
 ES_HOME=/usr/share/$NAME
 
-# Heap size defaults to 256m min, 1g max
-# Set ES_HEAP_SIZE to 50% of available RAM, but no more than 31g
-#ES_HEAP_SIZE=2g
-
-# Heap new generation
-#ES_HEAP_NEWSIZE=
-
-# max direct memory
-#ES_DIRECT_SIZE=
-
 # Additional Java OPTS
 #ES_JAVA_OPTS=
 
 # Maximum number of open files
-MAX_OPEN_FILES=65535
+MAX_OPEN_FILES=65536
 
 # Maximum amount of locked memory
 #MAX_LOCKED_MEMORY=
@@ -115,11 +105,7 @@ PID_FILE="$PID_DIR/$NAME.pid"
 DAEMON=$ES_HOME/bin/elasticsearch
 DAEMON_OPTS="-d -p $PID_FILE -Edefault.path.home=$ES_HOME -Edefault.path.logs=$LOG_DIR -Edefault.path.data=$DATA_DIR -Edefault.path.conf=$CONF_DIR"
 
-export ES_HEAP_SIZE
-export ES_HEAP_NEWSIZE
-export ES_DIRECT_SIZE
 export ES_JAVA_OPTS
-export ES_GC_LOG_FILE
 
 # Check DAEMON exists
 test -x $DAEMON || exit 0
@@ -140,11 +126,6 @@ checkJava() {
 case "$1" in
   start)
 	checkJava
-
-	if [ -n "$MAX_LOCKED_MEMORY" -a -z "$ES_HEAP_SIZE" ]; then
-		log_failure_msg "MAX_LOCKED_MEMORY is set - ES_HEAP_SIZE must also be set"
-		exit 1
-	fi
 
 	log_daemon_msg "Starting $DESC"
 
@@ -179,7 +160,7 @@ case "$1" in
 	fi
 
 	# Start Daemon
-	start-stop-daemon -d $ES_HOME --start -b --user "$ES_USER" -c "$ES_USER" --pidfile "$PID_FILE" --exec $DAEMON -- $DAEMON_OPTS
+	start-stop-daemon -d $ES_HOME --start --user "$ES_USER" -c "$ES_USER" --pidfile "$PID_FILE" --exec $DAEMON -- $DAEMON_OPTS
 	return=$?
 	if [ $return -eq 0 ]; then
 		i=0
